@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Penjat - Volta al Mon</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+
+  <body>
+    <!-- Pantalla inicio -->
+
+    <section id="pantallaComienzo">
+      <h1>Benvingut/da al Penjat - Volta al Món</h1>
+      <input id="username" type="text" placeholder="Nom d'usuari" />
+      <button id="startBtn">Començar Joc</button>
+    </section>
+
+    <!-- Pantalla juego -->
+
+    <section id="pantallaJuego" hidden>
+      <p>Categoria: <strong id="categoriaLabel"></strong></p>
+      <p>Usuari: <strong id="usuarioLabel"></strong></p>
+      <p>Temps: <strong id="tiempoLabel"></strong></p>
+      <p>Error: <strong id="errorLabel"></strong></p>
+
+      <div id="mascara"></div>
+      <div id="letras"></div>
+
+      <!-- Ahorcado -->
+      <div id="espacioAhorcado">
+        <p>Penjat:</p>
+        <div id="ahorcado"></div>
+      </div>
+
+      <h3>Ranking TOP 3 d'aquesta paraula:</h3>
+      <ol id="ranking"></ol>
+
+      <button id="nuevaPalabra">Nueva Palabra</button>
+    </section>
+
+    <!-- Pantalla final -->
+
+    <section id="pantallaFinal" hidden>
+      <h2 id="tituloFinal"></h2>
+      <p id="mensajeFinal"></p>
+      <img id="imagenFinal" alt="Imatge final" />
+      <p id="infoFinal"></p>
+      <button id="jugarDeNuevo">Tornar a jugar</button>
+    </section>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

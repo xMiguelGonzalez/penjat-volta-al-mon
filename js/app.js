@@ -21,6 +21,7 @@ const errorLabel = document.getElementById("errorLabel");
 
 const mascara = document.getElementById("mascara");
 const letras = document.getElementById("letras");
+const ahorcado = document.getElementById("ahorcado");
 
 const nuevaPalabraBtn = document.getElementById("nuevaPalabra");
 
@@ -143,6 +144,7 @@ function actualizarUI() {
     actualizarInfo();
     renderizarMascara();
     crearTeclado();
+    renderizarAhorcado();
 }
 
 
@@ -208,6 +210,93 @@ function terminarPartida(haGanado) {
     infoFinal.textContent = estado.palabraEscogida.info;
 }
 
+
+
+const DIBUJOS = [
+``,
+`
+______
+`,
+`
+|
+|
+|
+|
+|
+|______
+`,
+`
+|------
+|
+|
+|
+|
+|______
+`,
+`
+|------
+|    |
+|
+|
+|
+|______
+`,
+`
+|------
+|    |
+|    O
+|
+|
+|______
+`,
+`
+|------
+|    |
+|    O
+|    |
+|
+|______
+`,
+`
+|------
+|    |
+|    O
+|   /|
+|
+|______
+`,
+`
+|------
+|    |
+|    O
+|   /|\\
+|
+|______
+`,
+`
+|------
+|    |
+|    O
+|   /|\\
+|   /
+|______
+`,
+`
+|------
+|    |
+|    O
+|   /|\\
+|   / \\
+|______
+`
+];
+
+
+function renderizarAhorcado () {
+
+    ahorcado.textContent = DIBUJOS[estado.errores];
+
+}
 
 
 startBtn.addEventListener("click", iniciarJuego);

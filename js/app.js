@@ -44,6 +44,8 @@ const MAX_ERRORES = 10;
 
 
 let estado = null;
+let segundos = 0;
+let temporizador = null;
 
 
 function elegirPalabraAleatoria() {
@@ -64,6 +66,10 @@ function iniciarJuego() {
 
     const palabraEscogida = elegirPalabraAleatoria();
 
+
+    segundos = 0;
+    tiempoLabel.textContent = "0";
+
     estado = {
         username,
         palabraEscogida,
@@ -72,6 +78,8 @@ function iniciarJuego() {
         errores: 0,
         progreso: "jugando"
     };
+
+    iniciarTiempo();
 
     // Cambiar entre pantallas
 
@@ -90,8 +98,8 @@ function actualizarInfo() {
     usuarioLabel.textContent = estado.username;
     categoriaLabel.textContent = estado.palabraEscogida.categoria;
     errorLabel.textContent = String(estado.errores);
+    tiempoLabel.textContent = String(segundos);
 
-    tiempoLabel.textContent = "0";
 }
 
 function renderizarMascara() {
@@ -200,6 +208,7 @@ function comprobarVictoria() {
 
 
 function terminarPartida(haGanado) {
+    pararTiempo();
     estado.progreso = haGanado ? "victoria" : "derrota";
 
     pantallaJuego.hidden = true;
@@ -208,6 +217,7 @@ function terminarPartida(haGanado) {
     mensajeFinalLabel.textContent = haGanado ? "Felicitats! Has guanyat!" : "Oh no! Has perdut!";
 
     infoFinal.textContent = estado.palabraEscogida.info;
+    imagenFinal.src = estado.palabraEscogida.img;
 }
 
 
@@ -297,6 +307,24 @@ function renderizarAhorcado () {
     ahorcado.textContent = DIBUJOS[estado.errores];
 
 }
+
+function iniciarTiempo() {
+    pararTiempo();
+
+    temporizador = setInterval(() => {
+        segundos++;
+        tiempoLabel.textContent = segundos;
+    }, 1000);
+
+}
+
+function pararTiempo() {
+    if (temporizador) {
+        clearInterval(temporizador);
+        temporizador = null;
+    }
+}
+
 
 
 startBtn.addEventListener("click", iniciarJuego);

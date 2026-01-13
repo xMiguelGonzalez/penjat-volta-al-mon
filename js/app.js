@@ -41,6 +41,7 @@ const ALFABETO = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 // CONFIG
 
 const MAX_ERRORES = 10;
+const STORAGE_KEY = "juegoAhorcadoData";
 
 
 let estado = null;
@@ -87,8 +88,9 @@ function iniciarJuego() {
     pantallaFinal.hidden = true;
     pantallaJuego.hidden = false;
 
-    // Actualizar UI
     actualizarUI();
+
+    guardarPartida();
 
 }
 
@@ -176,6 +178,7 @@ function ClickLetra(letra) {
         if (!estado.correctas.includes(letra)) {
             estado.correctas.push(letra);
         }
+        
 
 
         actualizarUI();
@@ -186,6 +189,8 @@ function ClickLetra(letra) {
 
     }
 
+    
+
     estado.errores+= 1;
 
     actualizarUI();
@@ -194,6 +199,7 @@ function ClickLetra(letra) {
         terminarPartida(false);
     }
 
+    guardarPartida();
 }
 
 
@@ -218,6 +224,7 @@ function terminarPartida(haGanado) {
 
     infoFinal.textContent = estado.palabraEscogida.info;
     imagenFinal.src = estado.palabraEscogida.img;
+    borrarPartida();
 }
 
 
@@ -314,7 +321,10 @@ function iniciarTiempo() {
     temporizador = setInterval(() => {
         segundos++;
         tiempoLabel.textContent = segundos;
+        guardarPartida();
     }, 1000);
+
+    
 
 }
 
@@ -324,6 +334,61 @@ function pararTiempo() {
         temporizador = null;
     }
 }
+
+
+
+function guardarPartida() {
+    
+    const datosAGuardar = {
+        estado,
+        segundos
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(datosAGuardar));
+}
+
+function cargarPartida() {
+const datosGuardados = localStorage.getItem(STORAGE_KEY);
+if (!datosGuardados) {
+    return false;
+}
+
+const datos = JSON.parse(datosGuardados);
+estado = datos.estado;
+segundos = datos.segundos;
+
+return true;
+
+}
+
+
+if (cargarPartida()) {
+
+
+  if (estado.progreso !== "jugando") {
+
+    borrarPartida();
+    pantallaComienzo.hidden = false;
+    pantallaJuego.hidden = true;
+    pantallaFinal.hidden = true;
+
+  } else {
+    pantallaComienzo.hidden = true;
+    pantallaFinal.hidden = true;
+    pantallaJuego.hidden = false;
+
+    actualizarUI();
+    iniciarTiempo();
+  }
+}
+
+
+
+function borrarPartida() {
+    localStorage.removeItem(STORAGE_KEY);
+}
+
+
 
 
 
@@ -340,4 +405,6 @@ jugarDeNuevoBtn.addEventListener("click", () => {
     pantallaFinal.hidden = true;
     pantallaComienzo.hidden = false;
 });
+
+
 

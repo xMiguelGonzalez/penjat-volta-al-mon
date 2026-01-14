@@ -559,5 +559,8 @@ button {
   letter-spacing: 1px;
 }
 
-
-#ahorcado { white-space: pre; font-family: monospace; font-size: 18px; }
+#ahorcado {
+  white-space: pre;
+  font-family: monospace;
+  font-size: 18px;
+}

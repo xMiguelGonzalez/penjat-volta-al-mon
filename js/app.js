@@ -22,6 +22,7 @@ const errorLabel = document.getElementById("errorLabel");
 const mascara = document.getElementById("mascara");
 const letras = document.getElementById("letras");
 const ahorcado = document.getElementById("ahorcado");
+const ranking = document.getElementById("ranking");
 
 const nuevaPalabraBtn = document.getElementById("nuevaPalabra");
 
@@ -42,6 +43,7 @@ const ALFABETO = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 const MAX_ERRORES = 10;
 const STORAGE_KEY = "juegoAhorcadoData";
+const RANKING_KEY = "juegoAhorcadoRanking";
 
 
 let estado = null;
@@ -155,6 +157,8 @@ function actualizarUI() {
     renderizarMascara();
     crearTeclado();
     renderizarAhorcado();
+    renderRanking();
+
 }
 
 
@@ -224,6 +228,7 @@ function terminarPartida(haGanado) {
 
     infoFinal.textContent = estado.palabraEscogida.info;
     imagenFinal.src = estado.palabraEscogida.img;
+    actualizarRankingSiGana();
     borrarPartida();
 }
 
@@ -390,6 +395,77 @@ function borrarPartida() {
 
 
 
+// RANKING
+
+function cargarRanking() {
+    const datosGuardados = localStorage.getItem(RANKING_KEY);
+    if (!datosGuardados) {
+        return {};
+    }
+
+    return JSON.parse(datosGuardados);
+}
+function guardarRankingCompleto(ranking) {
+  localStorage.setItem(RANKING_KEY, JSON.stringify(ranking));
+}
+
+
+
+function actualizarRankingSiGana() {
+
+ if (estado.progreso !== "victoria") 
+    return;
+
+  const palabraKey = estado.palabraEscogida.palabra;
+  const entrada = {
+    usuario: estado.username,
+    errores: estado.errores,
+    tiempo: segundos
+  };
+
+
+    const rankingCompleto = cargarRanking();
+    const listaPalabras =  rankingCompleto[palabraKey] ?? [];
+
+    listaPalabras.push(entrada);
+
+
+     listaPalabras.sort((a, b) => {
+    if (a.errores !== b.errores) return a.errores - b.errores;
+    return a.tiempo - b.tiempo;
+  });
+
+
+    rankingCompleto[palabraKey] = listaPalabras.slice(0,3);
+
+    guardarRankingCompleto(rankingCompleto);
+}
+
+
+function renderRanking() {
+  if (!ranking || !estado) 
+    return;
+
+  const rankingTotal = cargarRanking();
+  const palabraKey = estado.palabraEscogida.palabra;
+  const top3 = rankingTotal[palabraKey] ?? [];
+
+  ranking.innerHTML = "";
+
+  if (top3.length === 0) {
+    const li = document.createElement("li");
+    li.textContent = "Encara no hi ha puntuacions.";
+    ranking.appendChild(li);
+    return;
+  }
+
+  top3.forEach((r) => {
+    const li = document.createElement("li");
+    li.textContent = `${r.usuario} — errors: ${r.errores}, temps: ${r.tiempo}s`;
+    ranking.appendChild(li);
+  });
+}
+  
 
 
 startBtn.addEventListener("click", iniciarJuego);
